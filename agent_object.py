@@ -8,15 +8,16 @@ from rotate_function import rotate
 
 
 class Agent:
-    def __init__(self, x: int = 200, y: int = 250, input_image: str = "sage.png"):
+    def __init__(self, x: int = 600, y: int = 745, input_image: str = "sage.png"):
         self.x = x
         self.y = y
         self.pivot = (self.x, self.y)
         image_ref = Path(get_assets_folder(), input_image)
         self.image = pygame.image.load(image_ref)
-        self.offset = pygame.math.Vector2(50, 0)
+        self.image = pygame.transform.scale(self.image, (15, 15))
+        self.offset = pygame.math.Vector2(5, 0)
         self.angle = 0
-        self.speed = 5
+        self.speed = 3
         self.screen = None
         self.box_collider = None
         self.can_move_up = True
@@ -90,12 +91,7 @@ class Agent:
         pygame.draw.circle(screen, (30, 250, 70), pivot, 3)  # Pivot point.
         self.box_collider = pygame.draw.rect(screen, (30, 250, 70), new_rect, 1)
         mouse_x, mouse_y = self.get_mouse_position()
-        if self.box_collider:
-            side_caption = f"| Top → {self.box_collider.top} | Bottom → {self.box_collider.bottom} | " \
-                           f"Left → {self.box_collider.left} | Right → {self.box_collider.right}"
-        else:
-            side_caption = ""
-        pygame.display.set_caption(f'Angle: {self.angle}, x: {mouse_x}, y: {mouse_y}, {side_caption}')
+        pygame.display.set_caption(f'Angle: {self.angle}, x: {mouse_x}, y: {mouse_y}')
         pygame.display.flip()
 
     def collision_pipeline(self, obstacle_list: list[pygame.Rect]):
