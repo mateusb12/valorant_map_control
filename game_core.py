@@ -1,6 +1,6 @@
 import pygame
 
-from valorant_map_game.pygame_example.agent_object import Agent
+from agent_object import Agent
 
 BG_COLOR = pygame.Color('gray12')
 FPS = 60
@@ -42,8 +42,8 @@ class App:
     def collision_check(self):
         self.sage.can_move_up, self.sage.can_move_down,  = True, True
         self.sage.can_move_right, self.sage.can_move_left = True, True
-        self.sage.check_border_collision()
-        self.sage.check_collision_with_another_square(self.obstacle)
+        obstacle_list = [self.obstacle]
+        self.sage.collision_pipeline(obstacle_list)
         return 0
 
 
