@@ -15,6 +15,7 @@ class App:
         pygame.init()
         self.screen = SCREEN
         self.clock = pygame.time.Clock()
+        self.cursor_task = "normal"
 
         self.sage = Agent()
         self.obstacle_pool = []
@@ -25,6 +26,8 @@ class App:
 
         self.clicks = 0
         self.click_positions = []
+
+        # Bind F1 to set the cursor to normal.
 
     def game_loop(self):
         running = True
@@ -37,19 +40,11 @@ class App:
 
             keys = pygame.key.get_pressed()
             self.sage.handle_movement(keys)
+            self.handle_cursors(keys)
             self.draw_loop()
             self.collision_check()
             self.clock.tick(FPS)
         pygame.quit()
-
-    def click_event(self):
-        self.clicks += 1
-        self.click_positions.append(pygame.mouse.get_pos())
-        if self.clicks == 4:
-            print(self.click_positions)
-            self.create_obstacle_from_clicks(self.click_positions)
-            self.clicks = 0
-            self.click_positions = []
 
     def draw_loop(self):
         self.screen.fill(BG_COLOR)
@@ -69,10 +64,46 @@ class App:
         self.sage.collision_pipeline(obstacle_list)
         return 0
 
+    def handle_cursors(self, input_keys: pygame.key) -> None:
+        if input_keys[pygame.K_F1]:
+            self.cursor_task = "normal"
+            pygame.mouse.set_cursor(*pygame.cursors.arrow)
+        if input_keys[pygame.K_F2]:
+            self.cursor_task = "rectangle_creator"
+            pygame.mouse.set_cursor(*pygame.cursors.broken_x)
+        if input_keys[pygame.K_F3]:
+            self.cursor_task = "rectangle_mover"
+            pygame.mouse.set_cursor(*pygame.cursors.diamond)
+
+    def click_event(self):
+        if self.cursor_task == "normal":
+            pygame.mouse.set_cursor(*pygame.cursors.arrow)
+        if self.cursor_task == "rectangle_creator":
+            pygame.mouse.set_cursor(*pygame.cursors.broken_x)
+            self.rectangle_creator_from_clicks()
+        if self.cursor_task == "rectangle_mover":
+            pygame.mouse.set_cursor(*pygame.cursors.diamond)
+            self.check_which_obstacle_is_clicked()
+
+    def rectangle_creator_from_clicks(self):
+        self.clicks += 1
+        self.click_positions.append(pygame.mouse.get_pos())
+        if self.clicks == 4:
+            print(self.click_positions)
+            self.create_obstacle_from_clicks(self.click_positions)
+            self.clicks = 0
+            self.click_positions = []
+
     def create_obstacle_from_clicks(self, click_list: list[tuple[int, int]]) -> None:
         rectangle_params = rectangle_parameters_from_coordinates(*click_list)
         new_obstacle = pygame.Rect(rectangle_params)
         self.obstacle_pool.append(new_obstacle)
+
+    def check_which_obstacle_is_clicked(self) -> pygame.Rect:
+        mouse_coords = pygame.mouse.get_pos()
+        for obstacle in self.obstacle_pool:
+            if obstacle.collidepoint(mouse_coords):
+                return obstacle
 
 
 def __main():
