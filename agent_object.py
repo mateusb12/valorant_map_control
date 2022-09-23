@@ -40,14 +40,14 @@ class Agent:
     def rotate_clockwise(self):
         if not self.can_rotate_clockwise:
             return
-        self.angle += 1 * self.speed
+        self.angle += 1.7 * self.speed
         if self.angle >= 360:
             self.angle = self.angle - 360
 
     def rotate_counter_clockwise(self):
         if not self.can_rotate_counter_clockwise:
             return
-        self.angle -= 1 * self.speed
+        self.angle -= 1.7 * self.speed
         if self.angle <= 0:
             self.angle = 360 - self.angle
 
