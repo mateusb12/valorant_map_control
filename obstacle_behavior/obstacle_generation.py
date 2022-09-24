@@ -1,8 +1,6 @@
-from typing import List, Tuple
-
 import pygame
 
-from tools import rectangle_parameters_from_coordinates
+from agent_behavior.tools import rectangle_parameters_from_coordinates
 
 
 def create_single_obstacles(rectangle_points: list[tuple[int, int]]) -> pygame.Rect:
