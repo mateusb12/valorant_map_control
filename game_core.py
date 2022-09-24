@@ -28,6 +28,8 @@ class App:
         self.clicks = 0
         self.click_positions = []
 
+        self.selected_obstacle = None
+
         # Bind F1 to set the cursor to normal.
 
     def game_loop(self):
@@ -66,10 +68,10 @@ class App:
         return 0
 
     def click_event(self):
-        if self.cursor_behavior.cursor_task == "rectangle_creator":
+        if self.cursor_behavior.current_cursor_task == "rectangle_creator":
             self.rectangle_creator_from_clicks()
-        if self.cursor_behavior.cursor_task == "rectangle_mover":
-            self.check_which_obstacle_is_clicked()
+        if self.cursor_behavior.current_cursor_task == "rectangle_mover":
+            self.move_clicked_obstacle()
 
     def rectangle_creator_from_clicks(self):
         self.clicks += 1
@@ -85,12 +87,24 @@ class App:
         new_obstacle = pygame.Rect(rectangle_params)
         self.obstacle_pool.append(new_obstacle)
 
-    def check_which_obstacle_is_clicked(self) -> pygame.Rect:
+    def move_clicked_obstacle(self):
+        if not self.selected_obstacle:
+            self.select_obstacle()
+        else:
+            self.move_selected_obstacle()
+            self.selected_obstacle = None
+
+    def select_obstacle(self) -> pygame.Rect:
         mouse_coords = pygame.mouse.get_pos()
         for obstacle in self.obstacle_pool:
             if obstacle.collidepoint(mouse_coords):
+                self.selected_obstacle = obstacle
                 print(obstacle)
                 return obstacle
+
+    def move_selected_obstacle(self):
+        self.selected_obstacle.center = pygame.mouse.get_pos()
+        self.selected_obstacle = None
 
 
 def __main():
