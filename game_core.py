@@ -17,6 +17,7 @@ class App:
         self.screen = SCREEN
         self.clock = pygame.time.Clock()
         self.cursor_behavior = CursorBehavior()
+        self.pressed_keys = None
 
         self.sage = Agent()
         self.obstacle_pool = []
@@ -29,7 +30,6 @@ class App:
         self.click_positions = []
 
         self.selected_obstacle = None
-
         # Bind F1 to set the cursor to normal.
 
     def game_loop(self):
@@ -41,9 +41,9 @@ class App:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.click_event()
 
-            keys = pygame.key.get_pressed()
-            self.sage.handle_movement(keys)
-            self.cursor_behavior.handle_cursors(keys)
+            self.pressed_keys = pygame.key.get_pressed()
+            self.sage.handle_movement(self.pressed_keys)
+            self.cursor_behavior.handle_cursors(self.pressed_keys)
             self.draw_loop()
             self.collision_check()
             self.clock.tick(FPS)
@@ -72,6 +72,8 @@ class App:
             self.rectangle_creator_from_clicks()
         if self.cursor_behavior.current_cursor_task == "rectangle_mover":
             self.move_clicked_obstacle()
+        if self.cursor_behavior.current_cursor_task == "rectangle_deleter":
+            self.delete_selected_obstacle()
 
     def rectangle_creator_from_clicks(self):
         self.clicks += 1
@@ -92,19 +94,25 @@ class App:
             self.select_obstacle()
         else:
             self.move_selected_obstacle()
-            self.selected_obstacle = None
 
     def select_obstacle(self) -> pygame.Rect:
         mouse_coords = pygame.mouse.get_pos()
         for obstacle in self.obstacle_pool:
             if obstacle.collidepoint(mouse_coords):
                 self.selected_obstacle = obstacle
-                print(obstacle)
                 return obstacle
 
     def move_selected_obstacle(self):
-        self.selected_obstacle.center = pygame.mouse.get_pos()
+        mouse_coords = pygame.mouse.get_pos()
+        self.selected_obstacle.center = mouse_coords
         self.selected_obstacle = None
+        self.cursor_behavior.set_task_to_normal()
+
+    def delete_selected_obstacle(self):
+        selected_obstacle = self.select_obstacle()
+        self.obstacle_pool.remove(selected_obstacle)
+        self.selected_obstacle = None
+        self.cursor_behavior.set_task_to_normal()
 
 
 def __main():

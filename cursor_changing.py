@@ -12,6 +12,8 @@ class CursorBehavior:
             self.set_task_to_rectangle_creator()
         if input_keys[pygame.K_F3]:
             self.set_task_to_rectangle_mover()
+        if input_keys[pygame.K_F4]:
+            self.set_task_to_rectangle_deleter()
 
     def set_task_to_normal(self):
         self.current_cursor_task = "normal"
@@ -19,9 +21,13 @@ class CursorBehavior:
 
     def set_task_to_rectangle_creator(self):
         self.current_cursor_task = "rectangle_creator"
-        pygame.mouse.set_cursor(*pygame.cursors.broken_x)
+        pygame.mouse.set_cursor(pygame.cursors.diamond)
 
     def set_task_to_rectangle_mover(self):
         self.current_cursor_task = "rectangle_mover"
-        pygame.mouse.set_cursor(*pygame.cursors.diamond)
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+
+    def set_task_to_rectangle_deleter(self):
+        self.current_cursor_task = "rectangle_deleter"
+        pygame.mouse.set_cursor(*pygame.cursors.broken_x)
 
