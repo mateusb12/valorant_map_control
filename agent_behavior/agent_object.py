@@ -4,6 +4,7 @@ from pathlib import Path
 import pygame
 
 from agent_behavior.rotate_function import rotate
+from agent_behavior.triangle_object import Triangle
 from references import get_assets_folder
 
 
@@ -91,6 +92,7 @@ class Agent:
         pygame.draw.circle(screen, (30, 250, 70), pivot, 3)  # Pivot point.
         self.box_collider = pygame.draw.rect(screen, (30, 250, 70), new_rect, 1)
         mouse_x, mouse_y = self.get_mouse_position()
+        self.plot_agent_vision_cone()
         pygame.display.set_caption(f'Angle: {self.angle}, x: {mouse_x}, y: {mouse_y}')
         pygame.display.flip()
 
@@ -145,3 +147,27 @@ class Agent:
     @staticmethod
     def get_mouse_position():
         return pygame.mouse.get_pos()
+
+    def plot_agent_vision_cone(self):
+        """Plot the vision cone of the agent. The vision cone is a 90 degrees arc"""
+        direction = self.angle
+        green_color = (30, 250, 70)
+        first_corner = (self.x, self.y)
+        second_corner = (self.x + 100 * math.cos(math.radians(direction - 45)),
+                         self.y + 100 * math.sin(math.radians(direction - 45)))
+        third_corner = (self.x + 100 * math.cos(math.radians(direction + 45)),
+                        self.y + 100 * math.sin(math.radians(direction + 45)))
+
+        arc_rect = pygame.Rect(self.x - 100, self.y - 100, 200, 200)
+        adjusted_direction = 360 - self.angle
+        start_angle = math.radians(adjusted_direction - 45)
+        stop_angle = math.radians(adjusted_direction + 45)
+        width = 300
+        # cone = pygame.draw.arc(self.screen, green_color, arc_rect, start_angle, stop_angle, width)
+        # pygame.draw.line(self.screen, green_color, first_corner, second_corner, 1)
+        # pygame.draw.line(self.screen, green_color, first_corner, third_corner, 1)
+
+        mouse_x, mouse_y = self.get_mouse_position()
+        triangle = Triangle(first_corner, second_corner, third_corner, self.screen)
+        triangle.mouse_detection()
+        return 0
