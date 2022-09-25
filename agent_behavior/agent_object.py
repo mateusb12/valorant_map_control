@@ -3,13 +3,14 @@ from pathlib import Path
 
 import pygame
 
+from agent_behavior.circular_sector_object import CircularSector
 from agent_behavior.rotate_function import rotate
 from agent_behavior.triangle_object import Triangle
 from references import get_assets_folder
 
 
 class Agent:
-    def __init__(self, x: int = 600, y: int = 745, input_image: str = "sage.png"):
+    def __init__(self, x: int = 668, y: int = 430, input_image: str = "sage.png"):
         self.x = x
         self.y = y
         self.pivot = (self.x, self.y)
@@ -168,6 +169,12 @@ class Agent:
         # pygame.draw.line(self.screen, green_color, first_corner, third_corner, 1)
 
         mouse_x, mouse_y = self.get_mouse_position()
-        triangle = Triangle(first_corner, second_corner, third_corner, self.screen)
-        triangle.mouse_detection()
+        # triangle = Triangle(first_corner, second_corner, third_corner, self.screen)
+        # triangle.mouse_detection()
+        circular_sector = CircularSector(center=(self.x, self.y), radius=100, start_angle=start_angle,
+                                         end_angle=stop_angle, direction=direction, screen=self.screen)
+        circular_sector.mouse_detection()
+        # circular_sector.check_collision(600, 380)
+
+        # current_caption = pygame.display.get_caption()
         return 0
