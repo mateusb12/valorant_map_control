@@ -38,7 +38,7 @@ class App:
             self.sage.handle_movement(self.pressed_keys)
             self.cursor_behavior.handle_cursors(self.pressed_keys)
             self.draw_loop()
-            self.collision_check()
+            # self.collision_check()
             self.clock.tick(FPS)
         pygame.quit()
 
@@ -52,7 +52,8 @@ class App:
         pg = PolygonObstacle(polygon_points, self.screen)
         if self.sage.box_collider is not None:
             pg.set_agent_box_collider(self.sage.box_collider)
-        # pg.check_mouse_collision()
+            collision_type = pg.get_collision_type()
+            self.sage.set_collision_movement_restrictions(collision_type)
         pg.check_agent_collision()
         pg.draw()
 
@@ -68,7 +69,7 @@ class App:
         self.sage.can_move_up, self.sage.can_move_down, = True, True
         self.sage.can_move_right, self.sage.can_move_left = True, True
         obstacle_list = self.obstacle_manipulation.obstacle_pool
-        self.sage.collision_pipeline(obstacle_list)
+        # self.sage.collision_pipeline(obstacle_list)
         return 0
 
 

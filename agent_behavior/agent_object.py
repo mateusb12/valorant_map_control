@@ -64,6 +64,7 @@ class Agent:
             if self.can_move_right:
                 self.x += delta_x * self.speed * factor
             if self.can_move_down:
+                print(self.can_move_down)
                 self.y += delta_y * self.speed * factor
         elif 90 <= self.angle < 180:
             if self.can_move_left:
@@ -106,7 +107,7 @@ class Agent:
 
     def check_border_collision(self):
         """Check if the agent has collided with the border of the screen."""
-        self.can_move_up, self.can_move_down, self.can_move_right, self.can_move_left = True, True, True, True
+        # self.can_move_up, self.can_move_down, self.can_move_right, self.can_move_left = True, True, True, True
         self.can_rotate_clockwise, self.can_rotate_counter_clockwise = True, True
         height = self.screen.get_height() - 3
         width = self.screen.get_width() - 3
@@ -164,3 +165,17 @@ class Agent:
         circular_sector.mouse_detection()
         # circular_sector.check_collision(720, 470)
         return 0
+
+    def allow_all_movements(self):
+        self.can_move_down, self.can_move_up, self.can_move_right, self.can_move_left = True, True, True, True
+
+    def set_collision_movement_restrictions(self, collision_type: str):
+        self.allow_all_movements()
+        if collision_type == "bottom":
+            self.can_move_down = False
+        elif collision_type == "top":
+            self.can_move_up = False
+        elif collision_type == "right":
+            self.can_move_right = False
+        elif collision_type == "left":
+            self.can_move_left = False
