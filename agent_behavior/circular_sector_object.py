@@ -25,12 +25,21 @@ class CircularSector:
         pygame.draw.arc(self.screen, self.color, (self.x - self.radius, self.y - self.radius,
                                                   self.radius * 2, self.radius * 2), self.start_angle, self.end_angle,
                         1)
-        # pygame.draw.polygon(self.screen, self.color, [self.triangle_first_corner, self.triangle_second_corner,
-        #                                               self.triangle_third_corner])
         pygame.draw.line(self.screen, self.color, self.triangle_first_corner, self.triangle_second_corner, 1)
         pygame.draw.line(self.screen, self.color, self.triangle_first_corner, self.triangle_third_corner, 1)
 
-    def check_collision(self, x: int, y: int) -> bool:
+    def fill_lines(self):
+        """ Fill lines with a loop from start_angle to end_angle """
+        start_angle = int(self.direction - 45)
+        end_angle = int(self.direction + 45)
+        step = 1
+        thickness = 4
+        for angle in range(start_angle, end_angle + 1, step):
+            x = self.x + self.radius * math.cos(math.radians(angle))
+            y = self.y + self.radius * math.sin(math.radians(angle))
+            pygame.draw.line(self.screen, self.color, (self.x, self.y), (x, y), thickness)
+
+    def check_point_collision(self, x: int, y: int) -> bool:
         """ Check if a point is inside a circular sector """
         diff_x = x - self.x
         diff_y = y - self.y
@@ -52,7 +61,7 @@ class CircularSector:
 
     def mouse_detection(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
-        if self.check_collision(mouse_x, mouse_y):
+        if self.check_point_collision(mouse_x, mouse_y):
             pygame.draw.circle(self.screen, (255, 0, 0), (mouse_x, mouse_y), 5)
 
 
