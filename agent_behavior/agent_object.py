@@ -152,29 +152,11 @@ class Agent:
     def plot_agent_vision_cone(self):
         """Plot the vision cone of the agent. The vision cone is a 90 degrees arc"""
         direction = self.angle
-        green_color = (30, 250, 70)
-        first_corner = (self.x, self.y)
-        second_corner = (self.x + 100 * math.cos(math.radians(direction - 45)),
-                         self.y + 100 * math.sin(math.radians(direction - 45)))
-        third_corner = (self.x + 100 * math.cos(math.radians(direction + 45)),
-                        self.y + 100 * math.sin(math.radians(direction + 45)))
-
-        arc_rect = pygame.Rect(self.x - 100, self.y - 100, 200, 200)
         adjusted_direction = 360 - self.angle
         start_angle = math.radians(adjusted_direction - 45)
         stop_angle = math.radians(adjusted_direction + 45)
-        width = 300
-        # cone = pygame.draw.arc(self.screen, green_color, arc_rect, start_angle, stop_angle, width)
-        # pygame.draw.line(self.screen, green_color, first_corner, second_corner, 1)
-        # pygame.draw.line(self.screen, green_color, first_corner, third_corner, 1)
-
-        mouse_x, mouse_y = self.get_mouse_position()
-        # triangle = Triangle(first_corner, second_corner, third_corner, self.screen)
-        # triangle.mouse_detection()
         circular_sector = CircularSector(center=(self.x, self.y), radius=100, start_angle=start_angle,
                                          end_angle=stop_angle, direction=direction, screen=self.screen)
         circular_sector.mouse_detection()
-        # circular_sector.check_collision(600, 380)
-
-        # current_caption = pygame.display.get_caption()
+        # circular_sector.check_collision(720, 470)
         return 0

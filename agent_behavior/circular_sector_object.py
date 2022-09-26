@@ -36,12 +36,18 @@ class CircularSector:
         diff_y = y - self.y
         arc_angle = math.atan2(diff_y, diff_x)
         angle = math.degrees(arc_angle)
-        if angle < 0:
-            angle += 360
         min_angle = self.direction - 45
         max_angle = self.direction + 45
-        first_condition = min_angle <= angle <= max_angle
-        second_condition = math.sqrt(diff_x ** 2 + diff_y ** 2) <= self.radius
+        if min_angle < 0:
+            min_angle += 360
+        if angle < 0:
+            angle += 360
+        if min_angle < max_angle:
+            first_condition = min_angle <= angle <= max_angle
+        else:
+            first_condition = min_angle <= angle or angle <= max_angle
+        hypotenuse = math.sqrt(diff_x ** 2 + diff_y ** 2)
+        second_condition = hypotenuse <= self.radius
         return first_condition and second_condition
 
     def mouse_detection(self):
