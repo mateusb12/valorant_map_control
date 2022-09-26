@@ -1,5 +1,6 @@
 import pygame
 
+from agent_behavior.corner_object import Corner
 from agent_behavior.polygon_obstacle import PolygonObstacle
 from mouse_behavior.cursor_changing import CursorBehavior
 from agent_behavior.tools import rectangle_parameters_from_coordinates
@@ -10,6 +11,7 @@ class ObstacleManipulation:
         self.screen = input_screen
         self.cursor_behavior = input_cursor_behavior
         self.obstacle_pool = []
+        self.corner_pool = []
 
         self.clicks = 0
         self.click_positions = []
@@ -26,6 +28,11 @@ class ObstacleManipulation:
     def create_dummy_polygon(self):
         polygon_points = [(259, 639), (258, 788), (576, 795), (574, 771), (496, 740), (496, 639)]
         return self.create_obstacle_from_clicks(polygon_points)
+
+    def create_dummy_corner(self):
+        corner_points = (468, 625)
+        new_corner = Corner(x=corner_points[0], y=corner_points[1], screen=self.screen)
+        self.corner_pool.append(new_corner)
 
     def click_event(self):
         if self.cursor_behavior.current_cursor_task == "rectangle_creator":
@@ -48,8 +55,6 @@ class ObstacleManipulation:
         self.click_positions = []
 
     def create_obstacle_from_clicks(self, click_list: list[tuple[int, int]]) -> None:
-        # rectangle_params = rectangle_parameters_from_coordinates(*click_list)
-        # new_obstacle = pygame.Rect(rectangle_params)
         new_obstacle = PolygonObstacle(click_list, self.screen)
         self.obstacle_pool.append(new_obstacle)
 

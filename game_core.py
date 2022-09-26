@@ -23,6 +23,7 @@ class App:
 
         self.sage = Agent()
         self.obstacle_manipulation.create_dummy_polygon()
+        self.obstacle_manipulation.create_dummy_corner()
         # Bind F1 to set the cursor to normal.
 
     def game_loop(self):
@@ -55,8 +56,12 @@ class App:
 
     def collision_check(self):
         self.sage.allow_all_movements()
-        obstacle_list: list[PolygonObstacle] = self.obstacle_manipulation.obstacle_pool
-        for obstacle in obstacle_list:
+        self.obstacle_pipeline()
+        self.corner_pipeline()
+        return 0
+
+    def obstacle_pipeline(self):
+        for obstacle in self.obstacle_manipulation.obstacle_pool:
             if self.sage.box_collider is not None:
                 obstacle.set_agent_box_collider(self.sage.box_collider)
             collision_type = obstacle.get_collision_type()
@@ -67,7 +72,23 @@ class App:
                 if edge_collision := obstacle.check_intersection_with_polygon(edge):
                     obstacle.color = pygame.Color("red")
             obstacle.draw()
-        return 0
+
+    def corner_pipeline(self):
+        for corner in self.obstacle_manipulation.corner_pool:
+            if self.sage.vision_field is not None:
+                if collision := self.sage.vision_field.check_point_collision(*corner.circle.center):
+                    current_color = pygame.Color("green")
+                    player_center = self.sage.box_collider.center
+                    corner_center = corner.circle.center
+                    edge = (player_center, corner_center)
+                    for obstacle in self.obstacle_manipulation.obstacle_pool:
+                        if obstacle.check_intersection_with_polygon(edge):
+                            current_color = pygame.Color("red")
+                    pygame.draw.line(self.screen, current_color, player_center, corner_center, 3)
+                    corner.color = current_color
+                else:
+                    corner.color = pygame.Color("red")
+            corner.draw()
 
 
 def __main():

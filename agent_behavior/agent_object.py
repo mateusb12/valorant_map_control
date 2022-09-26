@@ -128,7 +128,7 @@ class Agent:
         adjusted_direction = 360 - self.angle
         start_angle = math.radians(adjusted_direction - 45)
         stop_angle = math.radians(adjusted_direction + 45)
-        self.vision_field = CircularSector(center=(self.x, self.y), radius=100, start_angle=start_angle,
+        self.vision_field = CircularSector(center=(self.x, self.y), radius=150, start_angle=start_angle,
                                            end_angle=stop_angle, direction=direction, screen=self.screen)
         self.vision_field.mouse_detection()
         return 0
