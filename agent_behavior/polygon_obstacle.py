@@ -7,6 +7,8 @@ class PolygonObstacle:
     def __init__(self, points: list[tuple[float, float]], screen: pygame.Surface):
         self.points = points
         self.color = pygame.Color('darkblue')
+        self.edges = []
+        self.create_edges(points)
         self.screen = screen
         self.agent_box_collider = None
         self.polygon = None
@@ -14,6 +16,27 @@ class PolygonObstacle:
 
     def draw(self):
         self.polygon = pygame.draw.polygon(self.screen, self.color, self.points)
+
+    def create_edges(self, input_list: list):
+        for i, j in zip(input_list[::2], input_list[1::2]):
+            self.edges.append((i, j))
+
+    @staticmethod
+    def do_intersect(edge_a: tuple, edge_b: tuple):
+        """ Check if two lines intersect """
+        x1, y1 = edge_a[0]
+        x2, y2 = edge_a[1]
+        x3, y3 = edge_b[0]
+        x4, y4 = edge_b[1]
+        denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
+        if denominator == 0:
+            return False
+        t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / denominator
+        u = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / denominator
+        return 0 <= t <= 1 and 0 <= u <= 1
+
+    def check_intersection_with_polygon(self, input_edge: tuple):
+        return any(self.do_intersect(edge, input_edge) for edge in self.edges)
 
     def check_single_point_collision(self, x: int, y: int):
         """ Check if a point is inside a polygon """

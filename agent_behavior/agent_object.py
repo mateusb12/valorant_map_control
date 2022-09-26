@@ -19,6 +19,7 @@ class Agent:
         self.offset = pygame.math.Vector2(5, 0)
         self.angle = 0
         self.speed = 3
+        self.vision_field = None
         self.screen = None
         self.box_collider = None
         self.can_move_up = True
@@ -127,10 +128,9 @@ class Agent:
         adjusted_direction = 360 - self.angle
         start_angle = math.radians(adjusted_direction - 45)
         stop_angle = math.radians(adjusted_direction + 45)
-        circular_sector = CircularSector(center=(self.x, self.y), radius=100, start_angle=start_angle,
-                                         end_angle=stop_angle, direction=direction, screen=self.screen)
-        circular_sector.mouse_detection()
-        # circular_sector.check_collision(720, 470)
+        self.vision_field = CircularSector(center=(self.x, self.y), radius=100, start_angle=start_angle,
+                                           end_angle=stop_angle, direction=direction, screen=self.screen)
+        self.vision_field.mouse_detection()
         return 0
 
     def allow_all_movements(self):

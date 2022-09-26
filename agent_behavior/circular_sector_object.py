@@ -2,6 +2,8 @@ import math
 
 import pygame
 
+from agent_behavior.polygon_obstacle import PolygonObstacle
+
 
 class CircularSector:
     def __init__(self, center: tuple[float, float], radius: float, start_angle: float, end_angle: float,
@@ -19,6 +21,8 @@ class CircularSector:
         self.triangle_third_corner = (self.x + self.radius * math.cos(math.radians(direction + 45)),
                                       self.y + self.radius * math.sin(math.radians(direction + 45)))
         self.direction = direction
+        self.circle_color = pygame.Color("orange")
+        self.circle_point = None
         self.draw()
 
     def draw(self):
@@ -62,7 +66,9 @@ class CircularSector:
     def mouse_detection(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
         if self.check_point_collision(mouse_x, mouse_y):
-            pygame.draw.circle(self.screen, (255, 0, 0), (mouse_x, mouse_y), 5)
+            self.circle_point = pygame.draw.circle(self.screen, self.circle_color, (mouse_x, mouse_y), 5)
+            pygame.draw.line(self.screen, self.circle_color, (self.x, self.y), (mouse_x, mouse_y), 1)
+        return (self.x, self.y), (mouse_x, mouse_y)
 
 
 def __main():

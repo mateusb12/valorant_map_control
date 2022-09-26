@@ -62,6 +62,10 @@ class App:
             collision_type = obstacle.get_collision_type()
             obstacle.color = pygame.Color('red') if collision_type is not None else pygame.Color('darkblue')
             self.sage.set_collision_movement_restrictions(collision_type)
+            if self.sage.vision_field is not None:
+                edge = self.sage.vision_field.mouse_detection()
+                if edge_collision := obstacle.check_intersection_with_polygon(edge):
+                    obstacle.color = pygame.Color("red")
             obstacle.draw()
         return 0
 
