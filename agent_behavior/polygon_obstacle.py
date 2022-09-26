@@ -15,7 +15,7 @@ class PolygonObstacle:
     def draw(self):
         self.polygon = pygame.draw.polygon(self.screen, self.color, self.points)
 
-    def check_point_collision(self, x: int, y: int):
+    def check_single_point_collision(self, x: int, y: int):
         """ Check if a point is inside a polygon """
         n = len(self.points)
         inside = False
@@ -33,21 +33,11 @@ class PolygonObstacle:
 
     def check_mouse_collision(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
-        if self.check_point_collision(mouse_x, mouse_y):
+        if self.check_single_point_collision(mouse_x, mouse_y):
             pygame.draw.circle(self.screen, pygame.Color('blue'), (mouse_x, mouse_y), 5)
 
     def set_agent_box_collider(self, input_box_collider: pygame.Rect):
         self.agent_box_collider = input_box_collider
-
-    def check_collision_with_square_corners(self, input_square: pygame.Rect):
-        # sourcery skip: use-any, use-next
-        """ Check if a square is inside a polygon and change its color """
-        self.get_collision_type()
-        points = input_square.bottomleft, input_square.bottomright, input_square.topleft, input_square.topright
-        for point in points:
-            if self.check_point_collision(*point):
-                return True
-        return False
 
     def check_agent_collision(self):
         if self.agent_box_collider is None:
@@ -55,6 +45,16 @@ class PolygonObstacle:
         collision_result = self.check_collision_with_square_corners(self.agent_box_collider)
         self.color = pygame.Color('red') if collision_result else pygame.Color('darkblue')
         return collision_result
+
+    def check_collision_with_square_corners(self, input_square: pygame.Rect):
+        # sourcery skip: use-any, use-next
+        """ Check if a square is inside a polygon and change its color """
+        self.get_collision_type()
+        points = input_square.bottomleft, input_square.bottomright, input_square.topleft, input_square.topright
+        for point in points:
+            if self.check_single_point_collision(*point):
+                return True
+        return False
 
     def get_collision_type(self):  # sourcery skip: use-next
         """This method raycasts a line in four directions, and returns the length and direction of the first
@@ -70,6 +70,6 @@ class PolygonObstacle:
         point_pool = [bottom_test, top_test, left_test, right_test]
         point_tag = ['bottom', 'top', 'left', 'right']
         for point, tag in zip(point_pool, point_tag):
-            if self.check_point_collision(*point):
+            if self.check_single_point_collision(*point):
                 return tag
         return None

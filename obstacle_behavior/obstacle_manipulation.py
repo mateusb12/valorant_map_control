@@ -10,12 +10,11 @@ class ObstacleManipulation:
         self.screen = input_screen
         self.cursor_behavior = input_cursor_behavior
         self.obstacle_pool = []
-        rect_dummy_obstacle = self.create_dummy_rectangle()
-        self.obstacle_pool.append(rect_dummy_obstacle)
 
         self.clicks = 0
         self.click_positions = []
 
+        self.pressed_keys = None
         self.selected_obstacle = None
 
     @staticmethod
@@ -26,11 +25,13 @@ class ObstacleManipulation:
 
     def create_dummy_polygon(self):
         polygon_points = [(259, 639), (258, 788), (576, 795), (574, 771), (496, 740), (496, 639)]
-        return PolygonObstacle(polygon_points, self.screen)
+        return self.create_obstacle_from_clicks(polygon_points)
 
     def click_event(self):
         if self.cursor_behavior.current_cursor_task == "rectangle_creator":
             self.rectangle_creator_from_clicks()
+        if self.cursor_behavior.current_cursor_task == "rectangle_finisher":
+            self.rectangle_finish_creation()
         if self.cursor_behavior.current_cursor_task == "rectangle_mover":
             self.move_clicked_obstacle()
         if self.cursor_behavior.current_cursor_task == "rectangle_deleter":
@@ -38,16 +39,18 @@ class ObstacleManipulation:
 
     def rectangle_creator_from_clicks(self):
         self.clicks += 1
+        print(self.clicks)
         self.click_positions.append(pygame.mouse.get_pos())
-        if self.clicks == 4:
-            print(self.click_positions)
-            self.create_obstacle_from_clicks(self.click_positions)
-            self.clicks = 0
-            self.click_positions = []
+
+    def rectangle_finish_creation(self):
+        self.create_obstacle_from_clicks(self.click_positions)
+        self.clicks = 0
+        self.click_positions = []
 
     def create_obstacle_from_clicks(self, click_list: list[tuple[int, int]]) -> None:
-        rectangle_params = rectangle_parameters_from_coordinates(*click_list)
-        new_obstacle = pygame.Rect(rectangle_params)
+        # rectangle_params = rectangle_parameters_from_coordinates(*click_list)
+        # new_obstacle = pygame.Rect(rectangle_params)
+        new_obstacle = PolygonObstacle(click_list, self.screen)
         self.obstacle_pool.append(new_obstacle)
 
     def move_clicked_obstacle(self):
@@ -56,10 +59,10 @@ class ObstacleManipulation:
         else:
             self.move_selected_obstacle()
 
-    def select_obstacle(self) -> pygame.Rect:
+    def select_obstacle(self) -> PolygonObstacle:
         mouse_coords = pygame.mouse.get_pos()
         for obstacle in self.obstacle_pool:
-            if obstacle.collidepoint(mouse_coords):
+            if obstacle.check_single_point_collision(*mouse_coords):
                 self.selected_obstacle = obstacle
                 return obstacle
 

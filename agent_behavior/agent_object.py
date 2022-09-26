@@ -64,7 +64,6 @@ class Agent:
             if self.can_move_right:
                 self.x += delta_x * self.speed * factor
             if self.can_move_down:
-                print(self.can_move_down)
                 self.y += delta_y * self.speed * factor
         elif 90 <= self.angle < 180:
             if self.can_move_left:

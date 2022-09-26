@@ -22,6 +22,7 @@ class App:
         self.pressed_keys = None
 
         self.sage = Agent()
+        self.obstacle_manipulation.create_dummy_polygon()
         # Bind F1 to set the cursor to normal.
 
     def game_loop(self):
@@ -35,6 +36,7 @@ class App:
                     self.obstacle_manipulation.click_event()
 
             self.pressed_keys = pygame.key.get_pressed()
+            self.obstacle_manipulation.pressed_keys = self.pressed_keys
             self.sage.handle_movement(self.pressed_keys)
             self.cursor_behavior.handle_cursors(self.pressed_keys)
             self.draw_loop()
@@ -48,28 +50,33 @@ class App:
         bg_image = pygame.transform.scale(bg_image, (WIDTH, HEIGHT))
         self.screen.blit(bg_image, (0, 0))
 
-        polygon_points = [(259, 639), (258, 788), (576, 795), (574, 771), (496, 740), (496, 639)]
-        pg = PolygonObstacle(polygon_points, self.screen)
-        if self.sage.box_collider is not None:
-            pg.set_agent_box_collider(self.sage.box_collider)
-            collision_type = pg.get_collision_type()
-            self.sage.set_collision_movement_restrictions(collision_type)
-        pg.check_agent_collision()
-        pg.draw()
+        # polygon_points = [(259, 639), (258, 788), (576, 795), (574, 771), (496, 740), (496, 639)]
+        # pg = PolygonObstacle(polygon_points, self.screen)
+        self.collision_check()
+        # if self.sage.box_collider is not None:
+        #     pg.set_agent_box_collider(self.sage.box_collider)
+        #     collision_type = pg.get_collision_type()
+        #     self.sage.set_collision_movement_restrictions(collision_type)
+        # pg.check_agent_collision()
+        # pg.draw()
 
-        for obstacle in self.obstacle_manipulation.obstacle_pool:
-            if type(obstacle) == pygame.Rect:
-                pygame.draw.rect(self.screen, pygame.Color('orange'), obstacle)
-            else:
-                break
+        # for obstacle in self.obstacle_manipulation.obstacle_pool:
+        #     if type(obstacle) == pygame.Rect:
+        #         pygame.draw.rect(self.screen, pygame.Color('orange'), obstacle)
+        #     else:
+        #         break
         self.sage.draw(self.screen)
         # self.chamber.draw(self.screen)
 
     def collision_check(self):
-        self.sage.can_move_up, self.sage.can_move_down, = True, True
-        self.sage.can_move_right, self.sage.can_move_left = True, True
-        obstacle_list = self.obstacle_manipulation.obstacle_pool
-        # self.sage.collision_pipeline(obstacle_list)
+        self.sage.allow_all_movements()
+        obstacle_list: list[PolygonObstacle] = self.obstacle_manipulation.obstacle_pool
+        for obstacle in obstacle_list:
+            if self.sage.box_collider is not None:
+                obstacle.set_agent_box_collider(self.sage.box_collider)
+            collision_type = obstacle.get_collision_type()
+            self.sage.set_collision_movement_restrictions(collision_type)
+            obstacle.draw()
         return 0
 
 
