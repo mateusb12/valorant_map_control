@@ -99,11 +99,6 @@ class Agent:
         pygame.draw.circle(screen, (30, 250, 70), pivot, 3)  # Pivot point.
         self.box_collider = pygame.draw.rect(screen, (30, 250, 70), new_rect, 1)
 
-    def collision_pipeline(self, obstacle_list: list[pygame.Rect]):
-        self.check_border_collision()
-        for obstacle in obstacle_list:
-            self.check_collision_with_single_square(obstacle)
-
     def check_border_collision(self):
         """Check if the agent has collided with the border of the screen."""
         # self.can_move_up, self.can_move_down, self.can_move_right, self.can_move_left = True, True, True, True
@@ -121,33 +116,6 @@ class Agent:
         if left <= 0:
             self.can_move_left = False
         return 0
-
-    def check_collision_with_single_square(self, obstacle: pygame.Rect):
-        # sourcery skip: merge-comparisons, merge-duplicate-blocks, remove-redundant-if
-        if type(obstacle) != pygame.Rect:
-            return
-        if not self.box_collider.colliderect(obstacle):
-            return
-        if obstacle.top - self.box_collider.bottom <= 20:
-            self.can_move_down = False
-        if obstacle.bottom - self.box_collider.top <= 20:
-            self.can_move_up = False
-        if obstacle.left - self.box_collider.right <= 20:
-            self.can_move_right = False
-        if obstacle.right - self.box_collider.left <= 20:
-            self.can_move_left = False
-        self_four_corners = [self.box_collider.topleft, self.box_collider.topright,
-                             self.box_collider.bottomleft, self.box_collider.bottomright]
-        touching_corner = next((corner for corner in self_four_corners if obstacle.collidepoint(corner)), None)
-        if touching_corner == self.box_collider.topleft:
-            self.can_rotate_counter_clockwise = False
-        elif touching_corner == self.box_collider.topright:
-            self.can_rotate_clockwise = False
-        elif touching_corner == self.box_collider.bottomleft:
-            self.can_rotate_clockwise = False
-        elif touching_corner == self.box_collider.bottomright:
-            self.can_rotate_counter_clockwise = False
-        return True
 
     @staticmethod
     def get_mouse_position():

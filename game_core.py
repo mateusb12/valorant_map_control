@@ -50,23 +50,8 @@ class App:
         bg_image = pygame.transform.scale(bg_image, (WIDTH, HEIGHT))
         self.screen.blit(bg_image, (0, 0))
 
-        # polygon_points = [(259, 639), (258, 788), (576, 795), (574, 771), (496, 740), (496, 639)]
-        # pg = PolygonObstacle(polygon_points, self.screen)
         self.collision_check()
-        # if self.sage.box_collider is not None:
-        #     pg.set_agent_box_collider(self.sage.box_collider)
-        #     collision_type = pg.get_collision_type()
-        #     self.sage.set_collision_movement_restrictions(collision_type)
-        # pg.check_agent_collision()
-        # pg.draw()
-
-        # for obstacle in self.obstacle_manipulation.obstacle_pool:
-        #     if type(obstacle) == pygame.Rect:
-        #         pygame.draw.rect(self.screen, pygame.Color('orange'), obstacle)
-        #     else:
-        #         break
         self.sage.draw(self.screen)
-        # self.chamber.draw(self.screen)
 
     def collision_check(self):
         self.sage.allow_all_movements()
@@ -75,10 +60,7 @@ class App:
             if self.sage.box_collider is not None:
                 obstacle.set_agent_box_collider(self.sage.box_collider)
             collision_type = obstacle.get_collision_type()
-            if collision_type is not None:
-                obstacle.color = pygame.Color('red')
-            else:
-                obstacle.color = pygame.Color('darkblue')
+            obstacle.color = pygame.Color('red') if collision_type is not None else pygame.Color('darkblue')
             self.sage.set_collision_movement_restrictions(collision_type)
             obstacle.draw()
         return 0

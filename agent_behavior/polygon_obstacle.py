@@ -39,23 +39,6 @@ class PolygonObstacle:
     def set_agent_box_collider(self, input_box_collider: pygame.Rect):
         self.agent_box_collider = input_box_collider
 
-    def check_agent_collision(self):
-        if self.agent_box_collider is None:
-            return
-        collision_result = self.check_collision_with_square_corners(self.agent_box_collider)
-        self.color = pygame.Color('red') if collision_result else pygame.Color('darkblue')
-        return collision_result
-
-    def check_collision_with_square_corners(self, input_square: pygame.Rect):
-        # sourcery skip: use-any, use-next
-        """ Check if a square is inside a polygon and change its color """
-        self.get_collision_type()
-        points = input_square.bottomleft, input_square.bottomright, input_square.topleft, input_square.topright
-        for point in points:
-            if self.check_single_point_collision(*point):
-                return True
-        return False
-
     def get_collision_type(self):  # sourcery skip: use-next
         """This method raycasts a line in four directions, and returns the length and direction of the first
         collision """
