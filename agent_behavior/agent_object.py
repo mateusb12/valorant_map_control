@@ -5,7 +5,6 @@ import pygame
 
 from agent_behavior.circular_sector_object import CircularSector
 from agent_behavior.rotate_function import rotate
-from agent_behavior.triangle_object import Triangle
 from references import get_assets_folder
 
 
@@ -87,15 +86,18 @@ class Agent:
 
     def update_sprite(self, screen):
         self.screen = screen
+        self.rotate_sprite(screen)
+        mouse_x, mouse_y = self.get_mouse_position()
+        self.plot_agent_vision_cone()
+        pygame.display.set_caption(f'Angle: {self.angle}, x: {mouse_x}, y: {mouse_y}')
+        pygame.display.flip()
+
+    def rotate_sprite(self, screen):
         pivot = (self.x, self.y)
         new_image, new_rect = rotate(self.image, self.angle, pivot, self.offset)
         screen.blit(new_image, new_rect)
         pygame.draw.circle(screen, (30, 250, 70), pivot, 3)  # Pivot point.
         self.box_collider = pygame.draw.rect(screen, (30, 250, 70), new_rect, 1)
-        mouse_x, mouse_y = self.get_mouse_position()
-        self.plot_agent_vision_cone()
-        pygame.display.set_caption(f'Angle: {self.angle}, x: {mouse_x}, y: {mouse_y}')
-        pygame.display.flip()
 
     def collision_pipeline(self, obstacle_list: list[pygame.Rect]):
         self.check_border_collision()
@@ -122,6 +124,8 @@ class Agent:
 
     def check_collision_with_single_square(self, obstacle: pygame.Rect):
         # sourcery skip: merge-comparisons, merge-duplicate-blocks, remove-redundant-if
+        if type(obstacle) != pygame.Rect:
+            return
         if not self.box_collider.colliderect(obstacle):
             return
         if obstacle.top - self.box_collider.bottom <= 20:

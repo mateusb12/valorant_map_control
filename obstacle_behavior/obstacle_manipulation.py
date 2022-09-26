@@ -1,22 +1,32 @@
 import pygame
 
+from agent_behavior.polygon_obstacle import PolygonObstacle
 from mouse_behavior.cursor_changing import CursorBehavior
 from agent_behavior.tools import rectangle_parameters_from_coordinates
 
 
 class ObstacleManipulation:
-    def __init__(self, input_cursor_behavior: CursorBehavior):
+    def __init__(self, input_cursor_behavior: CursorBehavior, input_screen: pygame.Surface):
+        self.screen = input_screen
         self.cursor_behavior = input_cursor_behavior
         self.obstacle_pool = []
-        rectangle_points = [(547, 626), (700, 627), (545, 678), (700, 676)]
-        rectangle_params = rectangle_parameters_from_coordinates(*rectangle_points)
-        new_obstacle = pygame.Rect(rectangle_params)
-        self.obstacle_pool.append(new_obstacle)
+        rect_dummy_obstacle = self.create_dummy_rectangle()
+        self.obstacle_pool.append(rect_dummy_obstacle)
 
         self.clicks = 0
         self.click_positions = []
 
         self.selected_obstacle = None
+
+    @staticmethod
+    def create_dummy_rectangle():
+        rectangle_points = [(547, 626), (700, 627), (545, 678), (700, 676)]
+        rectangle_params = rectangle_parameters_from_coordinates(*rectangle_points)
+        return pygame.Rect(rectangle_params)
+
+    def create_dummy_polygon(self):
+        polygon_points = [(259, 639), (258, 788), (576, 795), (574, 771), (496, 740), (496, 639)]
+        return PolygonObstacle(polygon_points, self.screen)
 
     def click_event(self):
         if self.cursor_behavior.current_cursor_task == "rectangle_creator":

@@ -1,6 +1,7 @@
 import pygame
 
 from agent_behavior.agent_object import Agent
+from agent_behavior.polygon_obstacle import PolygonObstacle
 from mouse_behavior.cursor_changing import CursorBehavior
 from obstacle_behavior.obstacle_manipulation import ObstacleManipulation
 
@@ -17,7 +18,7 @@ class App:
         self.screen = SCREEN
         self.clock = pygame.time.Clock()
         self.cursor_behavior = CursorBehavior()
-        self.obstacle_manipulation = ObstacleManipulation(self.cursor_behavior)
+        self.obstacle_manipulation = ObstacleManipulation(self.cursor_behavior, self.screen)
         self.pressed_keys = None
 
         self.sage = Agent()
@@ -47,8 +48,19 @@ class App:
         bg_image = pygame.transform.scale(bg_image, (WIDTH, HEIGHT))
         self.screen.blit(bg_image, (0, 0))
 
+        polygon_points = [(259, 639), (258, 788), (576, 795), (574, 771), (496, 740), (496, 639)]
+        pg = PolygonObstacle(polygon_points, self.screen)
+        if self.sage.box_collider is not None:
+            pg.set_agent_box_collider(self.sage.box_collider)
+        # pg.check_mouse_collision()
+        pg.check_agent_collision()
+        pg.draw()
+
         for obstacle in self.obstacle_manipulation.obstacle_pool:
-            pygame.draw.rect(self.screen, pygame.Color('orange'), obstacle)
+            if type(obstacle) == pygame.Rect:
+                pygame.draw.rect(self.screen, pygame.Color('orange'), obstacle)
+            else:
+                break
         self.sage.draw(self.screen)
         # self.chamber.draw(self.screen)
 
