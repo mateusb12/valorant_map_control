@@ -11,11 +11,11 @@ class CursorBehavior:
         if input_keys[pygame.K_F2]:
             self.set_task_to_rectangle_creator()
         if input_keys[pygame.K_F3]:
-            self.set_task_to_rectangle_mover()
-        if input_keys[pygame.K_F4]:
-            self.set_task_to_rectangle_deleter()
-        if input_keys[pygame.K_ESCAPE]:
             self.set_task_to_rectangle_finisher()
+        if input_keys[pygame.K_F4]:
+            self.set_task_to_rectangle_mover()
+        if input_keys[pygame.K_F5]:
+            self.set_task_to_rectangle_deleter()
 
     def set_task_to_normal(self):
         self.current_cursor_task = "normal"

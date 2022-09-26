@@ -69,6 +69,7 @@ class ObstacleManipulation:
     def move_selected_obstacle(self):
         mouse_coords = pygame.mouse.get_pos()
         self.selected_obstacle.center = mouse_coords
+        self.selected_obstacle.draw()
         self.selected_obstacle = None
         self.cursor_behavior.set_task_to_normal()
 

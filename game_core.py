@@ -75,6 +75,10 @@ class App:
             if self.sage.box_collider is not None:
                 obstacle.set_agent_box_collider(self.sage.box_collider)
             collision_type = obstacle.get_collision_type()
+            if collision_type is not None:
+                obstacle.color = pygame.Color('red')
+            else:
+                obstacle.color = pygame.Color('darkblue')
             self.sage.set_collision_movement_restrictions(collision_type)
             obstacle.draw()
         return 0
