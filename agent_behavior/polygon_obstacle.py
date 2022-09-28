@@ -18,8 +18,6 @@ class PolygonObstacle:
         self.polygon = pygame.draw.polygon(self.screen, self.color, self.points)
 
     def create_edges(self, input_list: list):
-        # loop = list(zip(input_list, input_list[1:] + input_list[:1]))
-        # loop_2 = list(zip(zip(input_list[::2], input_list[1::2])))
         for i, j in zip(input_list, input_list[1:] + input_list[:1]):
             self.edges.append((i, j))
 

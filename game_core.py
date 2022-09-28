@@ -79,8 +79,11 @@ class App:
                     for obstacle in self.obstacle_manipulation.obstacle_pool:
                         if obstacle.check_intersection_with_polygon(edge):
                             current_color = pygame.Color("red")
-                        pygame.draw.line(self.screen, current_color, player_center, corner_center, 3)
+                        else:
+                            current_color = pygame.Color("green")
                     corner.color = current_color
+                    if current_color == pygame.Color("green"):
+                        pygame.draw.line(self.screen, current_color, player_center, corner_center, 3)
                 else:
                     corner.color = pygame.Color("red")
             corner.draw()
