@@ -59,7 +59,6 @@ class ObstacleManipulation:
 
     def rectangle_creator_from_clicks(self):
         self.clicks += 1
-        print(self.clicks)
         pos = list(pygame.mouse.get_pos())
         self.click_positions.append(pos)
 
@@ -70,7 +69,6 @@ class ObstacleManipulation:
 
     def create_obstacle_from_clicks(self, click_list: list[tuple[int, int]]) -> None:
         new_obstacle = PolygonObstacle(click_list, self.screen)
-        print(click_list)
         self.obstacle_pool.append(new_obstacle)
 
     def move_clicked_obstacle(self):

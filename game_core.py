@@ -66,10 +66,6 @@ class App:
                 obstacle.set_agent_box_collider(self.sage.box_collider)
             collision_result, collision_type = obstacle.collision_check()
             self.sage.set_collision_movement_restrictions(collision_type)
-            # if self.sage.vision_field is not None:
-            #     edge = self.sage.vision_field.mouse_detection()
-            #     if edge_collision := obstacle.check_intersection_with_polygon(edge):
-            #         obstacle.color = pygame.Color("red")
             obstacle.draw()
 
     def corner_pipeline(self):
@@ -83,7 +79,7 @@ class App:
                     for obstacle in self.obstacle_manipulation.obstacle_pool:
                         if obstacle.check_intersection_with_polygon(edge):
                             current_color = pygame.Color("red")
-                    pygame.draw.line(self.screen, current_color, player_center, corner_center, 3)
+                        pygame.draw.line(self.screen, current_color, player_center, corner_center, 3)
                     corner.color = current_color
                 else:
                     corner.color = pygame.Color("red")

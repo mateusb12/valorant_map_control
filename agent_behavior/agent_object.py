@@ -9,7 +9,7 @@ from references import get_assets_folder
 
 
 class Agent:
-    def __init__(self, x: int = 668, y: int = 430, input_image: str = "sage.png"):
+    def __init__(self, x: int = 853, y: int = 609, input_image: str = "sage.png"):
         self.x = x
         self.y = y
         self.pivot = (self.x, self.y)
