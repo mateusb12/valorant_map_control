@@ -68,22 +68,20 @@ class App:
             self.sage.set_collision_movement_restrictions(collision_type)
             obstacle.draw()
 
-    def corner_pipeline(self):
+    def corner_pipeline(self):  # sourcery skip: use-named-expression
         for corner in self.obstacle_manipulation.corner_pool:
             if self.sage.vision_field is not None:
                 if collision := self.sage.vision_field.check_point_collision(*corner.circle.center):
-                    current_color = pygame.Color("green")
                     player_center = self.sage.box_collider.center
                     corner_center = corner.circle.center
                     edge = (player_center, corner_center)
-                    for obstacle in self.obstacle_manipulation.obstacle_pool:
-                        if obstacle.check_intersection_with_polygon(edge):
-                            current_color = pygame.Color("red")
-                        else:
-                            current_color = pygame.Color("green")
-                    corner.color = current_color
-                    if current_color == pygame.Color("green"):
-                        pygame.draw.line(self.screen, current_color, player_center, corner_center, 3)
+                    intersection_results = [obstacle.check_intersection_with_polygon(edge)
+                                            for obstacle in self.obstacle_manipulation.obstacle_pool]
+                    if not any(intersection_results):
+                        corner.line_of_sight = True
+                        corner.color = pygame.Color("green")
+                        pygame.draw.line(self.screen, pygame.Color("green"), player_center, corner_center, 3)
+                        corner.line_of_sight = True
                 else:
                     corner.color = pygame.Color("red")
             corner.draw()

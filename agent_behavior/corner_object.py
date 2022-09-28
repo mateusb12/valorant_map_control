@@ -10,6 +10,7 @@ class Corner:
         self.radius = 5
         self.circle = None
         self.screen = screen
+        self.line_of_sight = False
         self.draw()
 
     def draw(self):

@@ -93,6 +93,7 @@ class ObstacleManipulation:
 
     def delete_selected_obstacle(self):
         selected_obstacle = self.select_obstacle()
+        print(selected_obstacle.points)
         self.obstacle_pool.remove(selected_obstacle)
         self.selected_obstacle = None
         self.cursor_behavior.set_task_to_normal()
