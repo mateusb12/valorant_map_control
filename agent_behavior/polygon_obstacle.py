@@ -79,3 +79,15 @@ class PolygonObstacle:
             if self.check_single_point_collision(*point):
                 return tag
         return None
+
+    def collision_check(self) -> tuple:  # sourcery skip: assign-if-exp, reintroduce-else
+        if self.agent_box_collider is None:
+            self.color = pygame.Color('darkblue')
+            return False, None
+        collision_type = self.get_collision_type()
+        if collision_type is None:
+            self.color = pygame.Color('darkblue')
+            return False, None
+        self.color = pygame.Color('red')
+        return True, collision_type
+

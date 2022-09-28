@@ -27,7 +27,14 @@ class ObstacleManipulation:
 
     def create_dummy_polygon(self):
         polygon_points = [(259, 639), (258, 788), (576, 795), (574, 771), (496, 740), (496, 639)]
-        return self.create_obstacle_from_clicks(polygon_points)
+        full_points = [
+            [(259, 639), (258, 788), (576, 795), (574, 771), (496, 740), (496, 639)],
+            [(545, 626), (699, 626), (699, 676), (545, 676)],
+            [(582, 516), (581, 526), (607, 527), (606, 569), (652, 569), (654, 593), (743, 595), (742, 572), (766, 570),
+             (763, 546), (624, 545), (625, 517), (585, 517)]
+        ]
+        for point_list in full_points:
+            self.create_obstacle_from_clicks(point_list)
 
     def create_dummy_corner(self):
         corner_points = (468, 625)
@@ -56,6 +63,7 @@ class ObstacleManipulation:
 
     def create_obstacle_from_clicks(self, click_list: list[tuple[int, int]]) -> None:
         new_obstacle = PolygonObstacle(click_list, self.screen)
+        print(click_list)
         self.obstacle_pool.append(new_obstacle)
 
     def move_clicked_obstacle(self):

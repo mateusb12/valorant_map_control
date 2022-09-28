@@ -137,7 +137,6 @@ class Agent:
         self.can_move_down, self.can_move_up, self.can_move_right, self.can_move_left = True, True, True, True
 
     def set_collision_movement_restrictions(self, collision_type: str):
-        self.allow_all_movements()
         if collision_type == "bottom":
             self.can_move_down = False
         elif collision_type == "top":
