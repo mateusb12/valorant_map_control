@@ -31,10 +31,6 @@ class ObstacleManipulation:
         return pygame.Rect(rectangle_params)
 
     def create_dummy_polygon(self):
-        # polygon_points = [(259, 639), (258, 788), (576, 795), (574, 771), (496, 740), (496, 639)] full_points = [ [
-        # (259, 639), (258, 788), (576, 795), (574, 771), (496, 740), (496, 639)], [(545, 626), (699, 626), (699,
-        # 676), (545, 676)], [(582, 516), (581, 526), (607, 527), (606, 569), (652, 569), (654, 593), (743, 595),
-        # (742, 572), (766, 570), (763, 546), (624, 545), (625, 517), (585, 517)] ]
         obstacle_list_path = Path(get_obstacle_behavior_folder(), "obstacle_point_list.json")
 
         with open(obstacle_list_path, "r") as file:
@@ -43,9 +39,12 @@ class ObstacleManipulation:
             self.create_obstacle_from_clicks(point_list)
 
     def create_dummy_corner(self):
-        corner_points = (834, 490)
-        new_corner = Corner(x=corner_points[0], y=corner_points[1], screen=self.screen)
-        self.corner_pool.append(new_corner)
+        corner_list_path = Path(get_obstacle_behavior_folder(), "corner_point_list.json")
+        with open(corner_list_path, "r") as file:
+            full_points = json.load(file)["lists"]
+        for coords in full_points:
+            new_corner = Corner(x=coords[0], y=coords[1], screen=self.screen)
+            self.corner_pool.append(new_corner)
 
     def click_event(self):
         if self.cursor_behavior.current_cursor_task == "rectangle_creator":
@@ -64,6 +63,7 @@ class ObstacleManipulation:
 
     def rectangle_finish_creation(self):
         self.create_obstacle_from_clicks(self.click_positions)
+        print(self.click_positions)
         self.clicks = 0
         self.click_positions = []
 
