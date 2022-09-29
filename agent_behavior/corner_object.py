@@ -16,7 +16,7 @@ class Corner:
 
     def evaluate_color(self):
         if self.last_seen_by == "neutral":
-            return pygame.Color("brown4")
+            return pygame.Color("darkolivegreen2")
         elif self.last_seen_by == "attack":
             return pygame.Color("red")
         elif self.last_seen_by == "defense":

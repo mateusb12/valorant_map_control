@@ -13,7 +13,7 @@ class CircularSector:
         self.radius = radius
         self.start_angle = start_angle
         self.end_angle = end_angle
-        self.color = (0, 255, 0)
+        self.color = pygame.Color("darkgoldenrod1")
         self.screen = screen
         self.triangle_first_corner = (self.x, self.y)
         self.triangle_second_corner = (self.x + self.radius * math.cos(math.radians(direction - 45)),
