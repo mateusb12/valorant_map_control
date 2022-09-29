@@ -42,10 +42,13 @@ class ObstacleManipulation:
         corner_list_path = Path(get_obstacle_behavior_folder(), "corner_point_list.json")
         with open(corner_list_path, "r") as file:
             full_points = json.load(file)
-        for coord_list in full_points.values():
+        for area, coord_list in full_points.items():
             for coords in coord_list:
                 new_x, new_y = coords
                 new_corner = Corner(x=new_x, y=new_y, screen=self.screen)
+                if area.startswith("t_"):
+                    new_corner.last_seen_by = "attack"
+                    new_corner.radius -= 1
                 self.corner_pool.append(new_corner)
 
     def click_event(self):
