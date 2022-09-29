@@ -7,7 +7,7 @@ class Corner:
         self.y = y
         self.color = (255, 0, 0)
         self.screen = None
-        self.radius = 5
+        self.radius = 4
         self.circle = None
         self.screen = screen
         self.line_of_sight = False
