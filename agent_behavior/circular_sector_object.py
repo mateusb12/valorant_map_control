@@ -51,6 +51,8 @@ class CircularSector:
         angle = math.degrees(arc_angle)
         min_angle = self.direction - 45
         max_angle = self.direction + 45
+        if max_angle > 360:
+            max_angle -= 360
         if min_angle < 0:
             min_angle += 360
         if angle < 0:

@@ -9,7 +9,7 @@ from references import get_assets_folder
 
 
 class Agent:
-    def __init__(self, x: int = 853, y: int = 609, input_image: str = "sage.png"):
+    def __init__(self, x: int = 881, y: int = 509, input_image: str = "sage.png"):
         self.x = x
         self.y = y
         self.pivot = (self.x, self.y)
@@ -17,7 +17,7 @@ class Agent:
         self.image = pygame.image.load(image_ref)
         self.image = pygame.transform.scale(self.image, (15, 15))
         self.offset = pygame.math.Vector2(5, 0)
-        self.angle = 0
+        self.angle = 359
         self.speed = 3
         self.vision_field = None
         self.screen = None
@@ -128,7 +128,7 @@ class Agent:
         adjusted_direction = 360 - self.angle
         start_angle = math.radians(adjusted_direction - 45)
         stop_angle = math.radians(adjusted_direction + 45)
-        self.vision_field = CircularSector(center=(self.x, self.y), radius=150, start_angle=start_angle,
+        self.vision_field = CircularSector(center=(self.x, self.y), radius=250, start_angle=start_angle,
                                            end_angle=stop_angle, direction=direction, screen=self.screen)
         self.vision_field.mouse_detection()
         return 0
