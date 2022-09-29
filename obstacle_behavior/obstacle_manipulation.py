@@ -41,10 +41,12 @@ class ObstacleManipulation:
     def create_dummy_corner(self):
         corner_list_path = Path(get_obstacle_behavior_folder(), "corner_point_list.json")
         with open(corner_list_path, "r") as file:
-            full_points = json.load(file)["lists"]
-        for coords in full_points:
-            new_corner = Corner(x=coords[0], y=coords[1], screen=self.screen)
-            self.corner_pool.append(new_corner)
+            full_points = json.load(file)
+        for coord_list in full_points.values():
+            for coords in coord_list:
+                new_x, new_y = coords
+                new_corner = Corner(x=new_x, y=new_y, screen=self.screen)
+                self.corner_pool.append(new_corner)
 
     def click_event(self):
         if self.cursor_behavior.current_cursor_task == "rectangle_creator":

@@ -75,11 +75,8 @@ class App:
                     player_center = self.sage.box_collider.center
                     corner_center = corner.circle.center
                     edge = (player_center, corner_center)
-                    intersection_results = []
-                    for obstacle in self.obstacle_manipulation.obstacle_pool:
-                        intersection_results.append(obstacle.check_intersection_with_polygon(edge))
-                    # intersection_results = [obstacle.check_intersection_with_polygon(edge)
-                    #                         for obstacle in self.obstacle_manipulation.obstacle_pool]
+                    intersection_results = [obstacle.check_intersection_with_polygon(edge)
+                                            for obstacle in self.obstacle_manipulation.obstacle_pool]
                     if not any(intersection_results):
                         corner.line_of_sight = True
                         corner.color = pygame.Color("green")
