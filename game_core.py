@@ -83,7 +83,8 @@ class App:
                         pygame.draw.line(self.screen, pygame.Color("green"), player_center, corner_center, 3)
                         corner.line_of_sight = True
                 else:
-                    corner.color = pygame.Color("red")
+                    if corner.line_of_sight is True:
+                        corner.color = pygame.Color("orange")
             corner.draw()
 
 

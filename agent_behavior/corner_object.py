@@ -5,7 +5,7 @@ class Corner:
     def __init__(self, x: int, y: int, screen: pygame.Surface):
         self.x = x
         self.y = y
-        self.color = (255, 0, 0)
+        self.color = pygame.Color("brown4")
         self.screen = None
         self.radius = 4
         self.circle = None
