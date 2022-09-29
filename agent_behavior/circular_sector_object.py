@@ -68,7 +68,7 @@ class CircularSector:
     def mouse_detection(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
         if self.check_point_collision(mouse_x, mouse_y):
-            self.circle_point = pygame.draw.circle(self.screen, self.circle_color, (mouse_x, mouse_y), 5)
+            self.circle_point = pygame.draw.circle(self.screen, self.circle_color, (mouse_x, mouse_y), 4)
         return (self.x, self.y), (mouse_x, mouse_y)
 
 
