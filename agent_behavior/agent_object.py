@@ -17,7 +17,7 @@ class Agent:
         self.image = pygame.image.load(image_ref)
         self.image = pygame.transform.scale(self.image, (15, 15))
         self.offset = pygame.math.Vector2(5, 0)
-        self.side = "defense"
+        self.side = "attack"
         self.angle = 272
         self.speed = 3
         self.vision_field = None

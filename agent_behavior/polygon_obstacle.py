@@ -6,7 +6,7 @@ import pygame
 class PolygonObstacle:
     def __init__(self, points: list[tuple[float, float]], screen: pygame.Surface):
         self.points = points
-        self.color = pygame.Color('darkblue')
+        self.color = pygame.Color('black')
         self.edges = []
         self.create_edges(points)
         self.screen = screen
@@ -86,11 +86,11 @@ class PolygonObstacle:
 
     def collision_check(self) -> tuple:  # sourcery skip: assign-if-exp, reintroduce-else
         if self.agent_box_collider is None:
-            self.color = pygame.Color('darkblue')
+            self.color = pygame.Color('black')
             return False, None
         collision_type = self.get_collision_type()
         if collision_type is None:
-            self.color = pygame.Color('darkblue')
+            self.color = pygame.Color('black')
             return False, None
         self.color = pygame.Color('red')
         return True, collision_type
