@@ -2,12 +2,12 @@ from pathlib import Path
 
 import pygame
 
-from agent_behavior.corner_object import Corner
 from agent_behavior.polygon_obstacle import PolygonObstacle
 from mouse_behavior.cursor_changing import CursorBehavior
 from agent_behavior.tools import rectangle_parameters_from_coordinates
 import json
 
+from obstacle_behavior.corner_object import Corner
 from references import get_obstacle_behavior_folder
 
 
@@ -48,6 +48,9 @@ class ObstacleManipulation:
                 new_corner = Corner(x=new_x, y=new_y, screen=self.screen)
                 if area.startswith("t_"):
                     new_corner.last_seen_by = "attack"
+                    new_corner.radius -= 1
+                elif area.startswith("ct_"):
+                    new_corner.last_seen_by = "defense"
                     new_corner.radius -= 1
                 self.corner_pool.append(new_corner)
 

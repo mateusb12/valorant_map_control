@@ -79,9 +79,11 @@ class App:
                                             for obstacle in self.obstacle_manipulation.obstacle_pool]
                     if not any(intersection_results):
                         corner.line_of_sight = True
-                        corner.last_seen_by = "discovery"
+                        if corner.last_seen_by == "neutral":
+                            corner.last_seen_by = "discovery"
+                        if corner.last_seen_by != self.sage.side:
+                            pygame.draw.line(self.screen, pygame.Color("green"), player_center, corner_center, 3)
                         corner.color = pygame.Color("green")
-                        pygame.draw.line(self.screen, pygame.Color("green"), player_center, corner_center, 3)
                         corner.line_of_sight = True
                 elif corner.line_of_sight is True:
                     corner.last_seen_by = self.sage.side

@@ -2,10 +2,10 @@ import pygame
 
 
 class Corner:
-    def __init__(self, x: int, y: int, screen: pygame.Surface):
+    def __init__(self, x: int, y: int, screen: pygame.Surface, last_seen_by: str = "neutral"):
         self.x = x
         self.y = y
-        self.last_seen_by = "neutral"
+        self.last_seen_by = last_seen_by
         self.color = self.evaluate_color()
         self.screen = None
         self.radius = 4
