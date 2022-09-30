@@ -2,7 +2,7 @@ import pygame
 
 
 class Corner:
-    def __init__(self, x: int, y: int, screen: pygame.Surface, last_seen_by: str = "neutral"):
+    def __init__(self, x: int, y: int, screen: pygame.Surface, last_seen_by: str = "neutral", area: str = "none"):
         self.x = x
         self.y = y
         self.last_seen_by = last_seen_by
@@ -12,6 +12,7 @@ class Corner:
         self.circle = None
         self.screen = screen
         self.line_of_sight = False
+        self.area = area
         self.draw()
 
     def evaluate_color(self):

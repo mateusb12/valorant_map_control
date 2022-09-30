@@ -41,7 +41,7 @@ class ObstacleManipulation:
         for area, coord_list in full_points.items():
             for coords in coord_list:
                 new_x, new_y = coords
-                new_corner = Corner(x=new_x, y=new_y, screen=self.screen)
+                new_corner = Corner(x=new_x, y=new_y, screen=self.screen, area=area)
                 if area.startswith("t_"):
                     new_corner.last_seen_by = "attack"
                     new_corner.radius -= 1
@@ -54,10 +54,19 @@ class ObstacleManipulation:
         corner_list_path = Path(get_obstacle_behavior_folder(), "panel_point_list.json")
         with open(corner_list_path, "r") as file:
             full_points = json.load(file)
-        # points = [[833, 533], [834, 495], [833, 466], [953, 467], [954, 520]]
-        points = full_points["a_short"]
-        panel = Panel(points, self.screen)
-        self.painting_pool.append(panel)
+        panel_list = ["mid_window", "mid_doors", "a_short", "a_lobby", "a_long", "c_long", "garage"]
+        region_table = {}
+        for panel_tag in panel_list:
+            points = full_points[panel_tag]
+            panel = Panel(points, self.screen, area=panel_tag)
+            region_table[panel_tag] = panel
+            self.painting_pool.append(panel)
+        for corner in self.corner_pool:
+            region = corner.area
+            if region in panel_list:
+                dad = region_table[corner.area]
+                dad.native_corners.append(corner)
+        return region_table
 
     def click_event(self):
         if self.cursor_behavior.current_cursor_task == "rectangle_creator":
