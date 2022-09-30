@@ -24,7 +24,7 @@ class App:
         self.sage = Agent()
         self.obstacle_manipulation.create_dummy_polygon()
         self.obstacle_manipulation.create_dummy_corner()
-        # Bind F1 to set the cursor to normal.
+        self.obstacle_manipulation.create_dummy_painting()
 
     def game_loop(self):
         running = True
@@ -58,6 +58,7 @@ class App:
         self.sage.allow_all_movements()
         self.obstacle_pipeline()
         self.corner_pipeline()
+        self.painting_pipeline()
         return 0
 
     def obstacle_pipeline(self):
@@ -89,6 +90,10 @@ class App:
                     corner.last_seen_by = self.sage.side
                     # corner.color = pygame.Color("orange")
             corner.draw()
+
+    def painting_pipeline(self):
+        for panel in self.obstacle_manipulation.painting_pool:
+            panel.draw()
 
 
 def __main():

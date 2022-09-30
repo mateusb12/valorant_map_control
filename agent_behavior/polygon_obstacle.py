@@ -14,8 +14,16 @@ class PolygonObstacle:
         self.polygon = None
         self.draw()
 
+    def get_polygon_size(self):
+        max_x = max(self.points, key=lambda x: x[0])[0]
+        min_x = min(self.points, key=lambda x: x[0])[0]
+        max_y = max(self.points, key=lambda x: x[1])[1]
+        min_y = min(self.points, key=lambda x: x[1])[1]
+        return max_x - min_x, max_y - min_y
+
     def draw(self):
         self.polygon = pygame.draw.polygon(self.screen, self.color, self.points)
+        # self.create_alpha_transparency()
 
     def create_edges(self, input_list: list):
         for i, j in zip(input_list, input_list[1:] + input_list[:1]):
@@ -94,4 +102,3 @@ class PolygonObstacle:
             return False, None
         self.color = pygame.Color('red')
         return True, collision_type
-

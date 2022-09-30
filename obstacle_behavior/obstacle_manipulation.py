@@ -8,6 +8,7 @@ from agent_behavior.tools import rectangle_parameters_from_coordinates
 import json
 
 from obstacle_behavior.corner_object import Corner
+from obstacle_behavior.painting_object import Panel
 from references import get_obstacle_behavior_folder
 
 
@@ -17,18 +18,13 @@ class ObstacleManipulation:
         self.cursor_behavior = input_cursor_behavior
         self.obstacle_pool = []
         self.corner_pool = []
+        self.painting_pool = []
 
         self.clicks = 0
         self.click_positions = []
 
         self.pressed_keys = None
         self.selected_obstacle = None
-
-    @staticmethod
-    def create_dummy_rectangle():
-        rectangle_points = [(547, 626), (700, 627), (545, 678), (700, 676)]
-        rectangle_params = rectangle_parameters_from_coordinates(*rectangle_points)
-        return pygame.Rect(rectangle_params)
 
     def create_dummy_polygon(self):
         obstacle_list_path = Path(get_obstacle_behavior_folder(), "obstacle_point_list.json")
@@ -53,6 +49,12 @@ class ObstacleManipulation:
                     new_corner.last_seen_by = "defense"
                     new_corner.radius -= 1
                 self.corner_pool.append(new_corner)
+
+    def create_dummy_painting(self):
+        points = [[832, 534], [831, 512], [863, 512], [863, 496], [833, 495], [833, 466], [953, 467],
+                  [954, 521], [931, 523], [931, 534], [833, 534]]
+        panel = Panel(points, self.screen)
+        self.painting_pool.append(panel)
 
     def click_event(self):
         if self.cursor_behavior.current_cursor_task == "rectangle_creator":
@@ -101,6 +103,7 @@ class ObstacleManipulation:
 
     def delete_selected_obstacle(self):
         selected_obstacle = self.select_obstacle()
+        selected_obstacle_points = selected_obstacle.points
         print(selected_obstacle.points)
         self.obstacle_pool.remove(selected_obstacle)
         self.selected_obstacle = None
