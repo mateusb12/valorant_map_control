@@ -26,20 +26,26 @@ class Panel:
                 defense_corners += 1
             elif corner.last_seen_by in ("neutral", "discovery"):
                 neutral_corners += 1
-        attack_proportion = attack_corners / (attack_corners + defense_corners + neutral_corners)
-        defense_proportion = defense_corners / (attack_corners + defense_corners + neutral_corners)
-        unknown_proportion = neutral_corners / (attack_corners + defense_corners + neutral_corners)
-        return attack_proportion, defense_proportion, unknown_proportion
+        # attack_proportion = attack_corners / (attack_corners + defense_corners + neutral_corners)
+        # defense_proportion = defense_corners / (attack_corners + defense_corners + neutral_corners)
+        # unknown_proportion = neutral_corners / (attack_corners + defense_corners + neutral_corners)
+        atk_def = attack_corners + defense_corners
+        # relative_proportion = attack_corners / atk_def if atk_def != 0 else 0
+        return attack_corners, defense_corners, neutral_corners
 
     def draw(self):
         self.draw_with_alpha_transparency()
 
     def draw_with_alpha_transparency(self):
-        attack_proportion, defense_proportion, neutral_proportion = self.calculate_region_map_control()
+        attack_corners, defense_corners, neutral_corners = self.calculate_region_map_control()
+        total_size = attack_corners + defense_corners + neutral_corners
+        neutral_proportion = neutral_corners / total_size if total_size != 0 else 0
+        attack_over_defense_proportion = attack_corners / (attack_corners + defense_corners) \
+            if attack_corners + defense_corners != 0 else 0
         transparency = int(150 + (35 - 150) * neutral_proportion)
         min_color = (0, 0, 255) if neutral_proportion < 0.9 else (239, 255, 117)
         max_color = (255, 0, 0) if neutral_proportion < 0.9 else (255, 174, 0)
-        r, g, b = self.interpolate_colors(min_color, max_color, attack_proportion)
+        r, g, b = self.interpolate_colors(min_color, max_color, attack_over_defense_proportion)
         color_with_transparency = (r, g, b, transparency)
         self.draw_polygon_alpha(self.screen, color_with_transparency, self.points)
 
