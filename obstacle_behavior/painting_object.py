@@ -1,3 +1,5 @@
+from typing import Union, Tuple
+
 import pygame
 
 
@@ -11,9 +13,9 @@ class Panel:
         self.native_corners = []
         self.draw()
 
-    def calculate_region_map_control(self) -> float:
+    def calculate_region_map_control(self) -> Union[int, tuple[float, float]]:
         if not self.native_corners:
-            return 0
+            return 0, 1
         attack_corners = 0
         defense_corners = 0
         neutral_corners = 0
@@ -24,17 +26,21 @@ class Panel:
                 defense_corners += 1
             elif corner.last_seen_by in ("neutral", "discovery"):
                 neutral_corners += 1
-        return attack_corners / (attack_corners + defense_corners + neutral_corners)
+        attack_proportion = attack_corners / (attack_corners + defense_corners + neutral_corners)
+        unknown_proportion = neutral_corners / (attack_corners + defense_corners + neutral_corners)
+        return attack_proportion, unknown_proportion
 
     def draw(self):
         self.draw_with_alpha_transparency()
 
     def draw_with_alpha_transparency(self):
-        map_control = self.calculate_region_map_control()
-        transparency = 75
-        min_color = (0, 0, 255)
-        max_color = (255, 0, 0)
-        r, g, b = self.interpolate_colors(min_color, max_color, map_control)
+        attack_proportion, neutral_proportion = self.calculate_region_map_control()
+        transparency = int(150 + (35 - 150) * neutral_proportion)
+        if neutral_proportion != 1:
+            print(neutral_proportion)
+        min_color = (0, 0, 255) if neutral_proportion < 0.9 else (239, 255, 117)
+        max_color = (255, 0, 0) if neutral_proportion < 0.9 else (255, 174, 0)
+        r, g, b = self.interpolate_colors(min_color, max_color, attack_proportion)
         color_with_transparency = (r, g, b, transparency)
         self.draw_polygon_alpha(self.screen, color_with_transparency, self.points)
 
