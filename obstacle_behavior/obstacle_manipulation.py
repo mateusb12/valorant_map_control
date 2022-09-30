@@ -51,8 +51,11 @@ class ObstacleManipulation:
                 self.corner_pool.append(new_corner)
 
     def create_dummy_painting(self):
-        points = [[832, 534], [831, 512], [863, 512], [863, 496], [833, 495], [833, 466], [953, 467],
-                  [954, 521], [931, 523], [931, 534], [833, 534]]
+        corner_list_path = Path(get_obstacle_behavior_folder(), "panel_point_list.json")
+        with open(corner_list_path, "r") as file:
+            full_points = json.load(file)
+        # points = [[833, 533], [834, 495], [833, 466], [953, 467], [954, 520]]
+        points = full_points["a_short"]
         panel = Panel(points, self.screen)
         self.painting_pool.append(panel)
 
