@@ -9,7 +9,7 @@ from references import get_assets_folder
 
 
 class Agent:
-    def __init__(self, x: int = 897, y: int = 583, input_image: str = "sage.png", initial_angle: int = 272,
+    def __init__(self, x: int = 897, y: int = 556, input_image: str = "sage.png", initial_angle: int = 272,
                  initial_side: str = "attack", input_screen: pygame.Surface = None):
         self.x = x
         self.y = y
@@ -91,8 +91,8 @@ class Agent:
     def update_sprite(self, screen):
         self.screen = screen
         self.rotate_sprite(screen)
-        mouse_x, mouse_y = self.get_mouse_position()
         self.plot_agent_vision_cone()
+        mouse_x, mouse_y = self.get_mouse_position()
         pygame.display.set_caption(f'Angle: {self.angle}, x: {mouse_x}, y: {mouse_y}')
         pygame.display.flip()
 
@@ -105,7 +105,6 @@ class Agent:
 
     def check_border_collision(self):
         """Check if the agent has collided with the border of the screen."""
-        # self.can_move_up, self.can_move_down, self.can_move_right, self.can_move_left = True, True, True, True
         self.can_rotate_clockwise, self.can_rotate_counter_clockwise = True, True
         height = self.screen.get_height() - 3
         width = self.screen.get_width() - 3
