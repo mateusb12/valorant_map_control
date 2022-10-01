@@ -36,17 +36,20 @@ class App:
                 if event.type == pygame.QUIT:
                     running = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    # self.click_event()
                     self.obstacle_manipulation.click_event()
 
-            self.pressed_keys = pygame.key.get_pressed()
-            self.obstacle_manipulation.pressed_keys = self.pressed_keys
-            self.current_agent.handle_movement(self.pressed_keys)
-            self.cursor_behavior.handle_cursors(self.pressed_keys)
+            self.key_loop()
             self.draw_loop()
-            # self.collision_check()
+            self.main_pipeline()
             self.clock.tick(FPS)
         pygame.quit()
+
+    def key_loop(self):
+        self.pressed_keys = pygame.key.get_pressed()
+        self.obstacle_manipulation.pressed_keys = self.pressed_keys
+        if self.current_agent.controllable:
+            self.current_agent.handle_movement(self.pressed_keys)
+        self.cursor_behavior.handle_cursors(self.pressed_keys)
 
     def draw_loop(self):
         self.screen.fill(BG_COLOR)
@@ -54,18 +57,18 @@ class App:
         bg_image = pygame.transform.scale(bg_image, (WIDTH, HEIGHT))
         self.screen.blit(bg_image, (0, 0))
 
-        self.current_agent = self.agent_pool[0]
-        self.main_pipeline()
-        self.current_agent.draw()
-
     def main_pipeline(self):
+        self.current_agent = self.agent_pool[0]
         self.current_agent.allow_all_movements()
         self.obstacle_pipeline()
         self.corner_pipeline()
         self.painting_pipeline()
+        self.current_agent.draw()
         return 0
 
     def obstacle_pipeline(self):
+        if not self.current_agent.controllable:
+            return
         for obstacle in self.obstacle_manipulation.obstacle_pool:
             if self.current_agent.box_collider is not None:
                 obstacle.set_agent_box_collider(self.current_agent.box_collider)

@@ -14,6 +14,7 @@ class Agent:
         self.x = x
         self.y = y
         self.pivot = (self.x, self.y)
+        self.controllable = True
         image_ref = Path(get_assets_folder(), input_image)
         self.image = pygame.image.load(image_ref)
         self.image = pygame.transform.scale(self.image, (15, 15))
