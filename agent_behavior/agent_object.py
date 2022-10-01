@@ -9,7 +9,8 @@ from references import get_assets_folder
 
 
 class Agent:
-    def __init__(self, x: int = 897, y: int = 583, input_image: str = "sage.png"):
+    def __init__(self, x: int = 897, y: int = 583, input_image: str = "sage.png", initial_angle: int = 272,
+                 initial_side: str = "attack", input_screen: pygame.Surface = None):
         self.x = x
         self.y = y
         self.pivot = (self.x, self.y)
@@ -17,11 +18,11 @@ class Agent:
         self.image = pygame.image.load(image_ref)
         self.image = pygame.transform.scale(self.image, (15, 15))
         self.offset = pygame.math.Vector2(5, 0)
-        self.side = "attack"
-        self.angle = 272
+        self.side = initial_side
+        self.angle = initial_angle
         self.speed = 3
         self.vision_field = None
-        self.screen = None
+        self.screen = input_screen
         self.box_collider = None
         self.can_move_up = True
         self.can_move_down = True
@@ -83,8 +84,8 @@ class Agent:
             if self.can_move_up:
                 self.y += delta_y * self.speed * factor
 
-    def draw(self, screen):
-        self.update_sprite(screen)
+    def draw(self):
+        self.update_sprite(self.screen)
 
     def update_sprite(self, screen):
         self.screen = screen

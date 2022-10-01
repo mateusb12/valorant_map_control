@@ -92,7 +92,7 @@ class PolygonObstacle:
                 return tag
         return None
 
-    def collision_check(self) -> tuple:  # sourcery skip: assign-if-exp, reintroduce-else
+    def obstacle_collision_check(self) -> tuple:  # sourcery skip: assign-if-exp, reintroduce-else
         if self.agent_box_collider is None:
             self.color = pygame.Color('black')
             return False, None

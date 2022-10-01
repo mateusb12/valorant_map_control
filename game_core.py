@@ -21,7 +21,10 @@ class App:
         self.obstacle_manipulation = ObstacleManipulation(self.cursor_behavior, self.screen)
         self.pressed_keys = None
 
-        self.sage = Agent()
+        sage = Agent(input_screen=self.screen)
+        # chamber = Agent(x=184, y=590, initial_side="defense", input_screen=self.screen)
+        self.agent_pool = [sage]
+        self.current_agent = self.agent_pool[0]
         self.obstacle_manipulation.create_dummy_polygon()
         self.obstacle_manipulation.create_dummy_corner()
         self.obstacle_manipulation.create_dummy_painting()
@@ -38,7 +41,7 @@ class App:
 
             self.pressed_keys = pygame.key.get_pressed()
             self.obstacle_manipulation.pressed_keys = self.pressed_keys
-            self.sage.handle_movement(self.pressed_keys)
+            self.current_agent.handle_movement(self.pressed_keys)
             self.cursor_behavior.handle_cursors(self.pressed_keys)
             self.draw_loop()
             # self.collision_check()
@@ -51,11 +54,12 @@ class App:
         bg_image = pygame.transform.scale(bg_image, (WIDTH, HEIGHT))
         self.screen.blit(bg_image, (0, 0))
 
-        self.collision_check()
-        self.sage.draw(self.screen)
+        self.current_agent = self.agent_pool[0]
+        self.main_pipeline()
+        self.current_agent.draw()
 
-    def collision_check(self):
-        self.sage.allow_all_movements()
+    def main_pipeline(self):
+        self.current_agent.allow_all_movements()
         self.obstacle_pipeline()
         self.corner_pipeline()
         self.painting_pipeline()
@@ -63,17 +67,17 @@ class App:
 
     def obstacle_pipeline(self):
         for obstacle in self.obstacle_manipulation.obstacle_pool:
-            if self.sage.box_collider is not None:
-                obstacle.set_agent_box_collider(self.sage.box_collider)
-            collision_result, collision_type = obstacle.collision_check()
-            self.sage.set_collision_movement_restrictions(collision_type)
+            if self.current_agent.box_collider is not None:
+                obstacle.set_agent_box_collider(self.current_agent.box_collider)
+            collision_result, collision_type = obstacle.obstacle_collision_check()
+            self.current_agent.set_collision_movement_restrictions(collision_type)
             obstacle.draw()
 
     def corner_pipeline(self):  # sourcery skip: use-named-expression
         for corner in self.obstacle_manipulation.corner_pool:
-            if self.sage.vision_field is not None:
-                if collision := self.sage.vision_field.check_point_collision(*corner.circle.center):
-                    player_center = self.sage.box_collider.center
+            if self.current_agent.vision_field is not None:
+                if collision := self.current_agent.vision_field.check_point_collision(*corner.circle.center):
+                    player_center = self.current_agent.box_collider.center
                     corner_center = corner.circle.center
                     edge = (player_center, corner_center)
                     intersection_results = [obstacle.check_intersection_with_polygon(edge)
@@ -82,13 +86,12 @@ class App:
                         corner.line_of_sight = True
                         if corner.last_seen_by == "neutral":
                             corner.last_seen_by = "discovery"
-                        if corner.last_seen_by != self.sage.side:
+                        if corner.last_seen_by != self.current_agent.side:
                             pygame.draw.line(self.screen, pygame.Color("green"), player_center, corner_center, 3)
                         corner.color = pygame.Color("green")
                         corner.line_of_sight = True
                 elif corner.line_of_sight is True:
-                    corner.last_seen_by = self.sage.side
-                    # corner.color = pygame.Color("orange")
+                    corner.last_seen_by = self.current_agent.side
             corner.draw()
 
     def painting_pipeline(self):
