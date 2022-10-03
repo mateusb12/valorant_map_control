@@ -18,6 +18,7 @@ class Agent:
         image_ref = Path(get_assets_folder(), input_image)
         self.image = pygame.image.load(image_ref)
         self.image = pygame.transform.scale(self.image, (15, 15))
+        self.image_tag = input_image
         self.offset = pygame.math.Vector2(5, 0)
         self.side = initial_side
         self.angle = initial_angle
@@ -92,9 +93,17 @@ class Agent:
         self.screen = screen
         self.rotate_sprite(screen)
         self.plot_agent_vision_cone()
+        self.draw_scanline()
         mouse_x, mouse_y = self.get_mouse_position()
         pygame.display.set_caption(f'Angle: {self.angle}, x: {mouse_x}, y: {mouse_y}')
         pygame.display.flip()
+
+    def draw_scanline(self):
+        """ Draw a line towards the agent current direction"""
+        radian_angle = math.radians(self.angle)
+        delta_x, delta_y = math.cos(radian_angle), math.sin(radian_angle)
+        line_segment = (self.x, self.y, self.x + delta_x * 100, self.y + delta_y * 100)
+        pygame.draw.line(self.screen, (255, 0, 0), (self.x, self.y), (self.x + delta_x*100, self.y + delta_y*100), 3)
 
     def rotate_sprite(self, screen):
         pivot = (self.x, self.y)

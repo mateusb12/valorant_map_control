@@ -24,10 +24,10 @@ class App:
         self.screen.fill(BG_COLOR)
         self.pressed_keys = None
 
-        sage = Agent(input_screen=self.screen)
-        # chamber = Agent(x=184, y=590, initial_side="defense", input_screen=self.screen)
-        # chamber.controllable = False
-        self.agent_pool = [sage]
+        sage = Agent(input_screen=self.screen, initial_side="attack", input_image="sage.png")
+        chamber = Agent(x=184, y=590, initial_side="defense", input_screen=self.screen, input_image="chamber.png")
+        chamber.controllable = False
+        self.agent_pool = [sage, chamber]
         self.current_agent = self.agent_pool[0]
         self.obstacle_manipulation.create_dummy_polygon()
         self.obstacle_manipulation.create_dummy_corner()
@@ -63,6 +63,7 @@ class App:
         self.current_agent.allow_all_movements()
         self.obstacle_pipeline()
         self.corner_pipeline(self.current_agent)
+        self.corner_pipeline(self.agent_pool[1])
         self.painting_pipeline()
         for agent in self.agent_pool:
             agent.draw()
@@ -82,21 +83,9 @@ class App:
         for corner in self.obstacle_manipulation.corner_pool:
             if input_agent.vision_field is not None:
                 if collision := input_agent.vision_field.check_point_collision(*corner.circle.center):
-                    player_center = input_agent.box_collider.center
-                    corner_center = corner.circle.center
-                    edge = (player_center, corner_center)
-                    intersection_results = [obstacle.check_intersection_with_polygon(edge)
-                                            for obstacle in self.obstacle_manipulation.obstacle_pool]
-                    if not any(intersection_results):
-                        corner.line_of_sight = True
-                        if corner.last_seen_by == "neutral":
-                            corner.last_seen_by = "discovery"
-                        if corner.last_seen_by != input_agent.side:
-                            pygame.draw.line(self.screen, pygame.Color("green"), player_center, corner_center, 3)
-                        corner.color = pygame.Color("green")
-                        corner.line_of_sight = True
-                elif corner.line_of_sight is True:
-                    corner.last_seen_by = input_agent.side
+                    corner.discovery_method(input_agent, self.obstacle_manipulation.obstacle_pool)
+                # elif corner.line_of_sight is True:
+                #     corner.last_seen_by = input_agent.side
             corner.draw()
 
     def painting_pipeline(self):
