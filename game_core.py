@@ -3,6 +3,7 @@ import pygame
 from agent_behavior.agent_object import Agent
 from mouse_behavior.cursor_changing import CursorBehavior
 from object_behavior.obstacles.obstacle_manipulation import ObstacleManipulation
+from team_behavior.prepare_teams import plot_teams
 
 BG_COLOR = pygame.Color('gray12')
 FPS = 60
@@ -23,10 +24,13 @@ class App:
         self.screen.fill(BG_COLOR)
         self.pressed_keys = None
 
+        player_pot = plot_teams(self.screen)
+
         sage = Agent(input_screen=self.screen, initial_side="attack", input_image="sage.png")
-        chamber = Agent(x=184, y=590, initial_side="defense", input_screen=self.screen, input_image="chamber.png")
-        chamber.controllable = False
-        self.agent_pool = [sage, chamber]
+        # chamber = Agent(x=184, y=590, initial_side="defense", input_screen=self.screen, input_image="chamber.png")
+        # chamber.controllable = False
+        self.agent_pool = [sage]
+        self.agent_pool.extend(player_pot)
         self.current_agent = self.agent_pool[0]
         self.obstacle_manipulation.create_dummy_polygon()
         self.obstacle_manipulation.create_dummy_corner()
