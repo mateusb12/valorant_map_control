@@ -6,8 +6,8 @@ from agent_behavior.polygon_obstacle import PolygonObstacle
 from mouse_behavior.cursor_changing import CursorBehavior
 import json
 
-from obstacle_behavior.corners.corner_object import Corner
-from obstacle_behavior.zone_control.painting_object import Panel
+from object_behavior.corners.corner_object import Corner
+from object_behavior.zone_control.painting_object import Panel
 from references import get_obstacle_behavior_folder, get_obstacles_folder, get_corners_folder, get_zone_control_folder
 
 

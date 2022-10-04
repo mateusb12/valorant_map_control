@@ -6,16 +6,16 @@ def get_assets_folder():
 
 
 def get_obstacle_behavior_folder():
-    return Path(Path(__file__).parent / "obstacle_behavior")
+    return Path(Path(__file__).parent / "object_behavior")
 
 
 def get_obstacles_folder():
-    return Path(Path(__file__).parent / "obstacle_behavior" / "obstacles")
+    return Path(Path(__file__).parent / "object_behavior" / "obstacles")
 
 
 def get_corners_folder():
-    return Path(Path(__file__).parent / "obstacle_behavior" / "corners")
+    return Path(Path(__file__).parent / "object_behavior" / "corners")
 
 
 def get_zone_control_folder():
-    return Path(Path(__file__).parent / "obstacle_behavior" / "zone_control")
+    return Path(Path(__file__).parent / "object_behavior" / "zone_control")
