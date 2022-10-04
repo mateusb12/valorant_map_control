@@ -4,12 +4,11 @@ import pygame
 
 from agent_behavior.polygon_obstacle import PolygonObstacle
 from mouse_behavior.cursor_changing import CursorBehavior
-from agent_behavior.tools import rectangle_parameters_from_coordinates
 import json
 
-from obstacle_behavior.corner_object import Corner
-from obstacle_behavior.painting_object import Panel
-from references import get_obstacle_behavior_folder
+from obstacle_behavior.corners.corner_object import Corner
+from obstacle_behavior.zone_control.painting_object import Panel
+from references import get_obstacle_behavior_folder, get_obstacles_folder, get_corners_folder, get_zone_control_folder
 
 
 class ObstacleManipulation:
@@ -27,7 +26,7 @@ class ObstacleManipulation:
         self.selected_obstacle = None
 
     def create_dummy_polygon(self):
-        obstacle_list_path = Path(get_obstacle_behavior_folder(), "obstacle_point_list.json")
+        obstacle_list_path = Path(get_obstacles_folder(), "obstacle_point_list.json")
 
         with open(obstacle_list_path, "r") as file:
             full_points = json.load(file)["lists"]
@@ -35,7 +34,7 @@ class ObstacleManipulation:
             self.create_obstacle_from_clicks(point_list)
 
     def create_dummy_corner(self):
-        corner_list_path = Path(get_obstacle_behavior_folder(), "corner_point_list.json")
+        corner_list_path = Path(get_corners_folder(), "corner_point_list.json")
         with open(corner_list_path, "r") as file:
             full_points = json.load(file)
         for area, coord_list in full_points.items():
@@ -51,7 +50,7 @@ class ObstacleManipulation:
                 self.corner_pool.append(new_corner)
 
     def create_dummy_painting(self):
-        corner_list_path = Path(get_obstacle_behavior_folder(), "panel_point_list.json")
+        corner_list_path = Path(get_zone_control_folder(), "panel_point_list.json")
         with open(corner_list_path, "r") as file:
             full_points = json.load(file)
         panel_list = ["mid_window", "mid_doors", "a_short", "a_lobby", "a_long", "c_long", "garage"]

@@ -93,7 +93,7 @@ class Agent:
         self.screen = screen
         self.rotate_sprite(screen)
         self.plot_agent_vision_cone()
-        self.draw_scanline()
+        # self.draw_scanline()
         mouse_x, mouse_y = self.get_mouse_position()
         pygame.display.set_caption(f'Angle: {self.angle}, x: {mouse_x}, y: {mouse_y}')
         pygame.display.flip()

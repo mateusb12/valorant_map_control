@@ -1,9 +1,8 @@
 import pygame
 
 from agent_behavior.agent_object import Agent
-from agent_behavior.polygon_obstacle import PolygonObstacle
 from mouse_behavior.cursor_changing import CursorBehavior
-from obstacle_behavior.obstacle_manipulation import ObstacleManipulation
+from obstacle_behavior.obstacles.obstacle_manipulation import ObstacleManipulation
 
 BG_COLOR = pygame.Color('gray12')
 FPS = 60
